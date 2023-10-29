@@ -1,0 +1,21 @@
+[package]
+name = "micro-rust"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alberto Ielpo <alberto@ielpo.net>"]
+
+[dependencies]
+actix-web = "4"
+derive-new = "0.5"
+env_logger = "0.10"
+log = "0.4"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+
+# utils
+fastrand = "2"
+
+# sse
+actix-web-lab = "0.20"
+parking_lot = "0.12.1"
+futures-util = { version = "0.3.25", default-features = false, features = ["std"] }
