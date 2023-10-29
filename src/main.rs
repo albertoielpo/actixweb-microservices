@@ -1,5 +1,6 @@
+use actix_cors::Cors;
 use actix_web::{middleware::Logger, App, HttpServer};
-use micro_rust::routes::rate_routes;
+use micro_rust::controller::rate_controller;
 use std::env;
 use std::result::Result;
 
@@ -46,8 +47,9 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .wrap(Cors::permissive())
             .wrap(Logger::default())
-            .configure(rate_routes::config)
+            .configure(rate_controller::config)
     })
     .bind((server_bind.addr, server_bind.port))?
     .run()

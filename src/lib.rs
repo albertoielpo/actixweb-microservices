@@ -1,2 +1,5 @@
+pub mod common;
 /** declare routes */
-pub mod routes;
+pub mod controller;
+
+pub mod utils;
