@@ -25,7 +25,7 @@ pub fn res_status_code<T: serde::Serialize>(
 }
 
 // TODO: move this...
-#[derive(Serialize)]
+#[derive(Serialize, Debug, Clone)]
 pub struct RateDto {
-    pub rate: f32,
+    pub rate: String,
 }

@@ -12,7 +12,9 @@ struct ServerBind {
     addr: String,
     port: u16,
 }
-
+/**
+ * Init logger with env variable
+ */
 fn init_logger() {
     /* init logging library */
     let rust_log: Result<String, env::VarError> = env::var("RUST_LOG");
@@ -23,6 +25,9 @@ fn init_logger() {
     env_logger::init();
 }
 
+/**
+ * Init server bind with env variables
+ */
 fn init_server_bind() -> ServerBind {
     /* init server bind */
     let addr = match env::var("BIND_ADDR") {
@@ -38,6 +43,9 @@ fn init_server_bind() -> ServerBind {
     return ServerBind { addr, port };
 }
 
+/**
+ * Startup main
+ */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     init_logger();
