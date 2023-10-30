@@ -1,5 +1,4 @@
 pub mod common;
-/** declare routes */
+pub mod config;
 pub mod controller;
-
 pub mod utils;

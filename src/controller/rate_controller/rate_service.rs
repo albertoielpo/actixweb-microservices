@@ -27,14 +27,16 @@ pub fn get_rate() -> RateDto {
     return value.1.clone();
 }
 
-fn round(x: f32, decimals: u32) -> f32 {
-    let y = 10i32.pow(decimals) as f32;
-    (x * y).round() / y
-}
-
 pub fn generate_rate() -> RateDto {
-    let rate = round(fastrand::f32(), 3) + 1.00;
-    return RateDto {
-        rate: rate.to_string(),
-    };
+    let rate = fastrand::f32() + 1.00;
+    let rate = rate.to_string();
+    if rate.len() >= 5 {
+        RateDto {
+            rate: String::from(&rate[0..5]),
+        }
+    } else {
+        RateDto {
+            rate: String::from(&rate[0..rate.len()]),
+        }
+    }
 }
