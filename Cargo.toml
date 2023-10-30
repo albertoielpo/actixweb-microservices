@@ -12,6 +12,7 @@ log = "0.4"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 actix-cors = "0.6.4"
+actix-http = "3.4"
 # utils
 fastrand = "2"
 

@@ -1,10 +1,16 @@
 use actix_cors::Cors;
-use actix_web::{middleware::Logger, App, HttpServer};
+use actix_http::StatusCode;
+use actix_web::{
+    dev::ServiceResponse,
+    http::{self},
+    middleware::{ErrorHandlerResponse, ErrorHandlers, Logger},
+    App, HttpServer, Result,
+};
+use actix_web_lab::middleware::CatchPanic;
+use log::{debug, error, info};
 use micro_rust::controller::rate_controller;
-use std::env;
-use std::result::Result;
 
-use log::{debug, info};
+use std::env;
 
 struct ServerBind {
     addr: String,
@@ -36,6 +42,41 @@ fn init_server_bind() -> ServerBind {
     return ServerBind { addr, port };
 }
 
+fn add_error_body<B: std::fmt::Debug>(
+    mut res: ServiceResponse<B>,
+) -> Result<ErrorHandlerResponse<B>> {
+    res.response_mut().headers_mut().insert(
+        http::header::CONTENT_TYPE,
+        http::header::HeaderValue::from_static("application/json"),
+    );
+
+    //TODO: change it properly
+    let status_mut = res.response_mut().status_mut();
+    *status_mut = StatusCode::INTERNAL_SERVER_ERROR;
+
+    let (req, res) = res.into_parts();
+
+    error!("Response body: {:?}", res.body());
+
+    let res = match res.error() {
+        Some(err) => {
+            let body_str = format!("{{\"message\": \"{}\"}}", err);
+            res.set_body(body_str)
+        }
+        None => {
+            let body_str = format!("{{\"message\": \"Generic Error\"}}");
+            res.set_body(body_str)
+        }
+    };
+
+    // modified bodies need to be boxed and placed in the "right" slot
+    let res = ServiceResponse::new(req, res)
+        .map_into_boxed_body()
+        .map_into_right_body();
+
+    Ok(ErrorHandlerResponse::Response(res))
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     init_logger();
@@ -48,6 +89,12 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(Cors::permissive())
+            .wrap(
+                ErrorHandlers::new()
+                    .default_handler_client(add_error_body)
+                    .default_handler_server(add_error_body),
+            )
+            .wrap(CatchPanic::default()) // <- after everything except logger
             .wrap(Logger::default())
             .configure(rate_controller::config)
     })

@@ -1,10 +1,23 @@
 ### 
-#
+
 ###
 GET http://localhost:3000/rate
+Accept: application/json
+
+### 
+#
+###
+GET http://localhost:3000/rate-panic
+Accept: application/json
+
+### 
+# 
+###
+GET http://localhost:3000/rate-errors
 Accept: application/json
 
 ### 
 # 
 ###
 GET http://localhost:3000/sse
+Accept: text/event-stream
