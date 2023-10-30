@@ -1,5 +1,4 @@
 use actix_web::{http::StatusCode, web::Json, CustomizeResponder, Responder};
-use serde::Serialize;
 
 pub fn res_ok<T: serde::Serialize>(payload: T) -> CustomizeResponder<Json<T>> {
     return Json(payload).customize().with_status(StatusCode::OK);
@@ -22,10 +21,4 @@ pub fn res_status_code<T: serde::Serialize>(
     status_code: StatusCode,
 ) -> CustomizeResponder<Json<T>> {
     return Json(payload).customize().with_status(status_code);
-}
-
-// TODO: move this...
-#[derive(Serialize, Debug, Clone)]
-pub struct RateDto {
-    pub rate: String,
 }
