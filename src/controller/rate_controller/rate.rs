@@ -1,3 +1,4 @@
+use crate::common::response::res_bad_request;
 use crate::{common::response::res_ok, controller::rate_controller::rate_service::get_rate};
 use actix_web::{get, Responder, Result};
 use actix_web_lab::sse;
@@ -23,6 +24,11 @@ async fn rate_panic() -> Result<impl Responder> {
 async fn rate_error() -> Result<impl Responder> {
     fs::read_to_string("FAKE.md")?;
     return Ok(res_ok(get_rate()));
+}
+
+#[get("/rate-error-managed")]
+async fn rate_error_managed() -> Result<impl Responder> {
+    return Ok(res_bad_request(get_rate()));
 }
 
 #[get("/sse")]

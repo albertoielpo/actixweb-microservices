@@ -1,20 +1,33 @@
 ### 
-
+# Ok
 ###
 GET http://localhost:3000/rate
 Accept: application/json
 
 ### 
-#
+# This is an example of panic! Should NEVER happens
 ###
 GET http://localhost:3000/rate-panic
 Accept: application/json
 
 ### 
-# 
+# This is an example of error raised with ?
+###
+GET http://localhost:3000/rate-error
+Accept: application/json
+
+### 
+# This is an example of not found route
 ###
 GET http://localhost:3000/rate-errors
 Accept: application/json
+
+###
+# This is an example of a managed error with payload
+###
+GET http://localhost:3000/rate-error-managed
+Accept: application/json
+
 
 ### 
 # 
