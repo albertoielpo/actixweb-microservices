@@ -5,6 +5,12 @@ GET http://localhost:3000/rate
 Accept: application/json
 
 ### 
+# SSE stream
+###
+GET http://localhost:3000/sse
+Accept: text/event-stream
+
+### 
 # This is an example of panic! Should NEVER happens
 ###
 GET http://localhost:3000/rate-panic
@@ -27,10 +33,3 @@ Accept: application/json
 ###
 GET http://localhost:3000/rate-error-managed
 Accept: application/json
-
-
-### 
-# 
-###
-GET http://localhost:3000/sse
-Accept: text/event-stream
