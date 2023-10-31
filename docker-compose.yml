@@ -1,9 +1,34 @@
 version: '3'
+
+networks:
+  micro-net:
+    driver: "bridge"
+
 services:
-  api:
+  micro-service:
     build:
-      context: ./api
+      context: .
+      dockerfile: DockerfileMicro
     ports:
       - "3000:3000"
     environment:
       - RUST_LOG=debug
+    networks:
+      - micro-net
+  websocket-service:
+    build:
+      context: .
+      dockerfile: DockerfileWebsocket
+    ports:
+      - "3001:3001"
+    environment:
+      - RUST_LOG=debug
+    networks:
+      - micro-net
+  # redis:
+  #   container_name: redis
+  #   image: redis:5
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - micro-net

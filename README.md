@@ -18,3 +18,11 @@ export class RateDto {
     @ApiProperty()
     rate: number;
 }
+##
+micro-rust
+-- microservice scaffolding
+-- actixweb
+
+websocket-rust
+-- websocket scaffolding
+-- actixweb

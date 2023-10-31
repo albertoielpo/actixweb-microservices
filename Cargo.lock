@@ -415,6 +415,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
+name = "common-lib"
+version = "0.1.0"
+
+[[package]]
 name = "convert_case"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -870,6 +874,7 @@ dependencies = [
  "actix-http",
  "actix-web",
  "actix-web-lab",
+ "common-lib",
  "derive-new",
  "env_logger",
  "fastrand",
@@ -1445,6 +1450,11 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 [[package]]
 name = "websocket-rust"
 version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "env_logger",
+ "log",
+]
 
 [[package]]
 name = "winapi"

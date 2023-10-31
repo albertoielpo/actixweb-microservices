@@ -21,3 +21,6 @@ fastrand = "2"
 # sse
 actix-web-lab = "0.20"
 tokio = { version = "1.18.5", features = ["full"] }
+
+# internal
+common-lib = { path = "../common-lib" }

@@ -1,8 +1,10 @@
 use std::sync::Mutex;
 
-use crate::{common::dto::RateDto, utils::date::unix_timestamp};
+use common_lib::utils::date::unix_timestamp;
 use lazy_static::lazy_static;
 use log::debug;
+
+use crate::common::dto::RateDto;
 
 lazy_static! {
     /**
