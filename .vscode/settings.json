@@ -1,5 +1,12 @@
 {
+    "[rust]": {
+        "editor.formatOnSave": true,
+        
+    },
     "rust-analyzer.linkedProjects": [
-        "./websocket-rust/Cargo.toml"
-    ]
+        "./Cargo.toml",
+        "./Cargo.toml",
+        "./Cargo.toml"
+    ],
+    
 }

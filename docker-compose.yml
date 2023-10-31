@@ -25,10 +25,10 @@ services:
       - RUST_LOG=debug
     networks:
       - micro-net
-  # redis:
-  #   container_name: redis
-  #   image: redis:5
-  #   ports:
-  #     - "6379:6379"
-  #   networks:
-  #     - micro-net
+  redis:
+    container_name: redis
+    image: redis:5
+    ports:
+      - "6379:6379"
+    networks:
+      - micro-net

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Micro Rust Launch",
+            "program": "${workspaceRoot}/target/debug/micro-rust",
+            "args": [],
+            "cwd": "${workspaceRoot}/target/debug/",
+            "sourceLanguages": ["rust"]
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Websocket Rust Launch",
+            "program": "${workspaceRoot}/target/debug/websocket-rust",
+            "args": [],
+            "cwd": "${workspaceRoot}/target/debug/",
+            "sourceLanguages": ["rust"]
+        }
+    ]
+}
