@@ -4,7 +4,13 @@ use log::info;
 use websocket::actor::websocket::RateWebSocket;
 use websocket::config::main_config::{init_logger, init_server_bind};
 
-async fn index(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
+/**
+ * Listen ws:// stream
+ */
+async fn websocket_route_listener(
+    req: HttpRequest,
+    stream: web::Payload,
+) -> Result<HttpResponse, Error> {
     let resp = ws::start(RateWebSocket::new(), &req, stream);
     info!("{:?}", resp);
     resp
@@ -21,7 +27,8 @@ async fn main() -> std::io::Result<()> {
         "Starting websocket in main thread {} {}",
         server_bind.addr, server_bind.port
     );
-    HttpServer::new(|| App::new().route("/", web::get().to(index)))
+    //Start http server and register websocket to route "/"
+    HttpServer::new(|| App::new().route("/", web::get().to(websocket_route_listener)))
         .bind((server_bind.addr, server_bind.port))?
         .run()
         .await
