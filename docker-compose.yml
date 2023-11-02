@@ -15,6 +15,7 @@ services:
       - RUST_LOG=debug
     networks:
       - micro-net
+
   websocket-service:
     build:
       context: .
@@ -25,6 +26,7 @@ services:
       - RUST_LOG=debug
     networks:
       - micro-net
+
   redis:
     container_name: redis
     image: redis:5

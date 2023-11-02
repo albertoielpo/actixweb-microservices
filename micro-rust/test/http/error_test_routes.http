@@ -1,0 +1,23 @@
+### 
+# This is an example of panic! Should NEVER happens
+###
+GET http://localhost:3000/error-test/panic
+Accept: application/json
+
+### 
+# This is an example of error raised with ?
+###
+GET http://localhost:3000/error-test/raised
+Accept: application/json
+
+### 
+# This is an example of not found route
+###
+GET http://localhost:3000/error-test/not-found
+Accept: application/json
+
+###
+# This is an example of a managed error with payload
+###
+GET http://localhost:3000/error-test/managed
+Accept: application/json

@@ -7,6 +7,11 @@ use actix_web::{
 };
 use log::{error, info};
 
+use crate::common::dto::ErrorDto;
+
+/**
+ * Error handler to be wrapped in main
+ */
 pub fn add_error_body<B: std::fmt::Debug>(
     mut res: ServiceResponse<B>,
 ) -> Result<ErrorHandlerResponse<B>> {
@@ -29,15 +34,21 @@ pub fn add_error_body<B: std::fmt::Debug>(
         let res = match res.error() {
             Some(err) => {
                 // I have an error .. it means is raised with ? in the flow...
-                let body_str = format!("{{\"message\": \"{}\"}}", err);
-                res.set_body(body_str)
+                let ed = ErrorDto {
+                    message: err.to_string(),
+                };
+                let serialized = serde_json::to_string(&ed).unwrap_or_default();
+                res.set_body(serialized)
             }
             None => {
                 // This is a really not found error
                 let sm = res.status_mut();
                 *sm = StatusCode::NOT_FOUND;
-                let body_str = format!("{{\"message\": \"Not found\"}}");
-                res.set_body(body_str)
+                let ed = ErrorDto {
+                    message: "Not found".to_owned(),
+                };
+                let serialized = serde_json::to_string(&ed).unwrap_or_default();
+                res.set_body(serialized)
             }
         };
 

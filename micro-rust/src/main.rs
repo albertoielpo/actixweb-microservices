@@ -6,9 +6,9 @@ use actix_web::{
 use actix_web_lab::middleware::CatchPanic;
 use log::info;
 use micro_rust::{
-    config::error::add_error_body,
+    config::error_handler::add_error_body,
     config::main_config::{init_logger, init_server_bind},
-    controller::rate_controller,
+    routes::{error_test_routes, rate_routes},
 };
 
 /**
@@ -33,7 +33,8 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(CatchPanic::default()) // <- after everything except logger
             .wrap(Logger::default())
-            .configure(rate_controller::config)
+            .configure(rate_routes::config)
+            .configure(error_test_routes::config)
     })
     .bind((server_bind.addr, server_bind.port))?
     .run()
