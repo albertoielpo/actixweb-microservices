@@ -5,7 +5,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Micro Rust Launch",
-            "program": "${workspaceRoot}/target/debug/micro-rust",
+            "program": "${workspaceRoot}/target/debug/micro",
             "args": [],
             "cwd": "${workspaceRoot}/target/debug/",
             "sourceLanguages": ["rust"]
@@ -14,7 +14,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Websocket Rust Launch",
-            "program": "${workspaceRoot}/target/debug/websocket-rust",
+            "program": "${workspaceRoot}/target/debug/websocket",
             "args": [],
             "cwd": "${workspaceRoot}/target/debug/",
             "sourceLanguages": ["rust"]

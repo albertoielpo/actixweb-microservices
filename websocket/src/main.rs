@@ -4,7 +4,7 @@ use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
 use log::{debug, info};
 use std::time::Duration;
-use websocket_rust::config::main_config::{init_logger, init_server_bind};
+use websocket::config::main_config::{init_logger, init_server_bind};
 
 /// How often messages are sent
 const DISPATCH_INTERVAL: Duration = Duration::from_secs(5);

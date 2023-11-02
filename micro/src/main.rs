@@ -5,7 +5,7 @@ use actix_web::{
 };
 use actix_web_lab::middleware::CatchPanic;
 use log::info;
-use micro_rust::{
+use micro::{
     config::error_handler::add_error_body,
     config::main_config::{init_logger, init_server_bind},
     routes::{error_test_routes, rate_routes},

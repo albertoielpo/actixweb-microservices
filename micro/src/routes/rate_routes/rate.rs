@@ -19,7 +19,7 @@ async fn rate() -> Result<impl Responder> {
  * GET <base_url>/sse
  */
 #[get("/sse")]
-async fn timestamp() -> impl Responder {
+async fn sse_event_stream() -> impl Responder {
     let (sender, receiver) = tokio::sync::mpsc::channel(2);
 
     actix_web::rt::spawn(async move {

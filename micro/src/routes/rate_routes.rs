@@ -6,5 +6,5 @@ pub mod rate_service;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(rate::rate);
-    cfg.service(rate::timestamp);
+    cfg.service(rate::sse_event_stream);
 }

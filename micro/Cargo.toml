@@ -1,5 +1,5 @@
 [package]
-name = "micro-rust"
+name = "micro"
 version = "0.1.0"
 edition = "2021"
 authors = ["Alberto Ielpo <alberto@ielpo.net>"]
