@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(CatchPanic::default()) // <- after everything except logger
             .wrap(Logger::default())
             .configure(rate_routes::config)
-            .configure(error_test_routes::config)
+            .configure(error_test_routes::config) //<- test routes.. demonstration purpouses
     })
     .bind((server_bind.addr, server_bind.port))?
     .run()
