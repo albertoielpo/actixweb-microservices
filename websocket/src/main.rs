@@ -1,4 +1,4 @@
-use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
+use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
 use log::info;
 use websocket::actor::websocket::RateWebSocket;
@@ -28,8 +28,12 @@ async fn main() -> std::io::Result<()> {
         server_bind.addr, server_bind.port
     );
     //Start http server and register websocket to route "/"
-    HttpServer::new(|| App::new().route("/", web::get().to(websocket_route_listener)))
-        .bind((server_bind.addr, server_bind.port))?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .wrap(Logger::default())
+            .route("/", web::get().to(websocket_route_listener))
+    })
+    .bind((server_bind.addr, server_bind.port))?
+    .run()
+    .await
 }
