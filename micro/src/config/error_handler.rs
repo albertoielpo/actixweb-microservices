@@ -10,6 +10,7 @@ use actix_web::{
 use derive_more::{Display, Error};
 use derive_new::new;
 use log::error;
+use serde_json::Value;
 #[derive(Debug, Display, Error, new)]
 #[display(fmt = "{{\"message\": \"{}\"}}", message)]
 pub struct AppError {
@@ -65,23 +66,24 @@ pub fn add_error_body<B: std::fmt::Debug>(
         http::header::HeaderValue::from_static("application/json"),
     );
 
-    let status_mut = res.response_mut().status_mut();
-    if *status_mut != StatusCode::NOT_FOUND {
-        // This is a managed error raised by ResponseError
-        return Ok(ErrorHandlerResponse::Response(res.map_into_left_body()));
-    }
-
-    // If is not a managed error then set +500 http status code...
-    *status_mut = StatusCode::INTERNAL_SERVER_ERROR;
-
     let (req, mut res) = res.into_parts();
-
     let res = match res.error() {
         Some(err) => {
             // I have an error .. it means is raised with ? in the flow...
-            error!("Status: 500 - Body: {:?}", res.body());
-            let d = format!("{}", AppError::e500(err.to_string()));
-            res.set_body(d)
+            error!("Status: {} - Body: {:?}", res.status(), res.body());
+            let json = format!("{}", err.to_string());
+            let json_check: Result<Value, serde_json::Error> = serde_json::from_str(&json);
+            match json_check {
+                Ok(_) => {
+                    // this is a json error .. then return
+                    res.set_body(json)
+                }
+                Err(_) => {
+                    // this is not a json error .. then wrap and return
+                    let d = format!("{}", AppError::e500(err.to_string()));
+                    res.set_body(d)
+                }
+            }
         }
         None => {
             // This is a really not found error

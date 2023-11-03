@@ -71,3 +71,8 @@ To test websocket API open a connection via <code>new WebSocket(`http://localhos
 To start the stream send the json payload <code>{ event: "cmd", data: { type: "start" }}</code>
 
 To stop the stream send the json payload  <code>{ event: "cmd", data: { type: "stop" }} </code>
+
+
+## Docs
+Actix Web: https://actix.rs
+Learn rust: https://www.rust-lang.org/learn

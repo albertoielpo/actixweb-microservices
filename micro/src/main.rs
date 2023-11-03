@@ -8,7 +8,7 @@ use log::info;
 use micro::{
     config::error_handler::add_error_body,
     config::main_config::{init_logger, init_server_bind},
-    routes::{error_test_routes, rate_routes},
+    routes::{auth_routes, error_test_routes, rate_routes},
 };
 
 /**
@@ -34,6 +34,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(CatchPanic::default()) // <- after everything except logger
             .wrap(Logger::default())
             .configure(rate_routes::config)
+            .configure(auth_routes::config)
             .configure(error_test_routes::config) //<- test routes.. demonstration purpouses
     })
     .bind((server_bind.addr, server_bind.port))?
