@@ -1,23 +1,25 @@
+@baseUrl = http://localhost:3000
+
 ### 
 # This is an example of panic! Should NEVER happens
 ###
-GET http://localhost:3000/error-test/panic
+GET {{baseUrl}}/error-test/panic
 Accept: application/json
 
 ### 
 # This is an example of error raised with ?
 ###
-GET http://localhost:3000/error-test/raised
+GET {{baseUrl}}/error-test/raised
 Accept: application/json
 
 ### 
 # This is an example of not found route
 ###
-GET http://localhost:3000/error-test/not-found
+GET {{baseUrl}}/error-test/not-found
 Accept: application/json
 
 ###
-# This is an example of a managed error with payload
+# This is an example of a managed error using error trait
 ###
-GET http://localhost:3000/error-test/managed
+GET {{baseUrl}}/error-test/managed/403
 Accept: application/json

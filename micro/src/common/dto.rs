@@ -4,8 +4,3 @@ use serde::Serialize;
 pub struct RateDto {
     pub rate: String,
 }
-
-#[derive(Serialize, Debug, Clone)]
-pub struct ErrorDto {
-    pub message: String,
-}
