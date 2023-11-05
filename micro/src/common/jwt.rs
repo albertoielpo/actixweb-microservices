@@ -1,7 +1,9 @@
+use actix_web::guard::GuardContext;
 use common_lib::utils::date::unix_timestamp;
 use hmac::{Hmac, Mac};
 use jwt::{Error, SignWithKey, VerifyWithKey};
 use lazy_static::lazy_static;
+use log::debug;
 use sha2::Sha256;
 use std::{collections::BTreeMap, env};
 
@@ -36,9 +38,20 @@ pub fn sign(username: &str) -> Result<String, Error> {
     Ok(token)
 }
 
-pub fn verify(token: &str) -> Result<(), Error> {
-    let key: Hmac<Sha256> = Hmac::new_from_slice(JWT_SECRET.as_bytes())?;
-    //let claims: BTreeMap<String, String> = token.verify_with_key(&key)?;  //get data
-    token.verify_with_key(&key)?;
-    Ok(())
+pub fn verify(ctx: &GuardContext) -> bool {
+    debug!("verify...");
+    let auth_header = ctx.head().headers().get("authorization");
+    if auth_header.is_none() {
+        debug!("Unauthorized");
+        return false;
+    }
+
+    debug!("{:?}", auth_header.unwrap());
+
+    return true;
+    // let key: Hmac<Sha256> = Hmac::new_from_slice(JWT_SECRET.as_bytes())?;
+    // //let claims: BTreeMap<String, String> = token.verify_with_key(&key)?;  //get data
+    // let res = token.verify_with_key(&key);
+
+    // Ok(())
 }
