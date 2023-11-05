@@ -7,10 +7,13 @@ use actix_web::{
 };
 use std::fs;
 
+// include the first slash but always avoid the trailing slash usage
+pub const ERROR_TEST_SCOPE: &str = "/error-test";
+
 /**
  * GET <base_url>/error-test/panic
  */
-#[route("/error-test/panic", method = "GET", method = "HEAD")]
+#[route("/panic", method = "GET", method = "HEAD")]
 async fn rate_panic() -> Result<impl Responder> {
     //this file does not exists! panic!
     fs::read_to_string("FAKE.md").expect("Test panic error");
@@ -21,7 +24,7 @@ async fn rate_panic() -> Result<impl Responder> {
 /**
  * GET <base_url>/error-test/raised
  */
-#[route("/error-test/raised", method = "GET", method = "HEAD")]
+#[route("/raised", method = "GET", method = "HEAD")]
 async fn rate_error() -> Result<impl Responder> {
     //this file does not exists! propagate error
     fs::read_to_string("FAKE.md")?;
@@ -32,7 +35,7 @@ async fn rate_error() -> Result<impl Responder> {
 /**
  * GET <base_url>/error-test/managed/1
  */
-#[route("/error-test/managed/{id}", method = "GET", method = "HEAD")]
+#[route("/managed/{id}", method = "GET", method = "HEAD")]
 async fn rate_error_managed(path: web::Path<u32>) -> Result<impl Responder, AppError> {
     let path = path.into_inner();
     match path {
