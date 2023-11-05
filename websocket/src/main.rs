@@ -21,11 +21,12 @@ async fn websocket_route_listener(
  */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    const VERSION: &str = env!("CARGO_PKG_VERSION");
     init_logger();
     let server_bind = init_server_bind();
     info!(
-        "Starting websocket in main thread {} {}",
-        server_bind.addr, server_bind.port
+        "Starting websocket in main thread {} {} version {}",
+        server_bind.addr, server_bind.port, VERSION
     );
     //Start http server and register websocket to route "/"
     HttpServer::new(|| {

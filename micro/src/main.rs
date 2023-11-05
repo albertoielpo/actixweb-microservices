@@ -16,11 +16,14 @@ use micro::{
  */
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    const VERSION: &str = env!("CARGO_PKG_VERSION");
+
     init_logger();
     let server_bind = init_server_bind();
+
     info!(
-        "Starting webserver in main thread {} {}",
-        server_bind.addr, server_bind.port
+        "Starting micro in main thread {} {} version {}",
+        server_bind.addr, server_bind.port, VERSION
     );
 
     HttpServer::new(|| {
