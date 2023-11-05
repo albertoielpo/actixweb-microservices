@@ -983,11 +983,13 @@ dependencies = [
  "derive_more",
  "env_logger",
  "fastrand",
+ "hmac",
  "jwt",
  "lazy_static",
  "log",
  "serde",
  "serde_json",
+ "sha2",
  "tokio",
 ]
 

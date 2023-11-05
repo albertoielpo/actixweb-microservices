@@ -10,3 +10,8 @@ pub struct LoginDto {
     pub username: String,
     pub password: String,
 }
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct TokenDto {
+    pub token: String,
+}

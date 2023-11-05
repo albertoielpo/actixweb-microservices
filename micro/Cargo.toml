@@ -23,6 +23,8 @@ lazy_static = "1.4"
 # utils
 fastrand = "2"
 jwt = "0.16"
+hmac = "0.12"
+sha2 = "0.10"
 
 # sse
 actix-web-lab = "0.20"

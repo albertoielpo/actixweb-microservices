@@ -1,5 +1,13 @@
-use crate::common::{dto::LoginDto, response::res_ok};
+use crate::{
+    common::{
+        dto::{LoginDto, TokenDto},
+        jwt::sign,
+        response::res_ok,
+    },
+    config::error_handler::AppError,
+};
 use actix_web::{route, web, Responder, Result};
+use log::error;
 
 // form: web::Form<FormData> for application/x-www-form-urlencoded
 
@@ -7,11 +15,20 @@ use actix_web::{route, web, Responder, Result};
  * POST <base_url>/auth/login
  */
 #[route("/auth/login", method = "POST")]
-async fn login(info: web::Json<LoginDto>) -> Result<impl Responder> {
-    // just remap
-    let another_login_dto = LoginDto {
-        username: info.username.to_string(),
-        password: info.password.to_string(),
-    };
-    return Ok(res_ok(another_login_dto));
+async fn login(info: web::Json<LoginDto>) -> Result<impl Responder, AppError> {
+    //TODO: change credential verification to database
+    if info.username == "admin" && info.password == "password" {
+        let token = sign(&info.username);
+        match token {
+            Ok(token) => {
+                return Ok(res_ok(TokenDto { token }));
+            }
+            Err(e) => {
+                error!("{}", e);
+                return Err(AppError::e401("Unauthorized".to_owned()));
+            }
+        }
+    }
+
+    Err(AppError::e401("Unauthorized".to_owned()))
 }
