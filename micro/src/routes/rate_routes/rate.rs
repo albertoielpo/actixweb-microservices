@@ -1,5 +1,5 @@
 use crate::{common::response::res_ok, routes::rate_routes::rate_service::get_rate};
-use actix_web::{get, Responder, Result};
+use actix_web::{route, Responder, Result};
 use actix_web_lab::sse;
 use log::info;
 use serde_json::json;
@@ -10,15 +10,16 @@ use tokio::time::sleep;
 /**
  * GET <base_url>/rate
  */
-#[get("/rate")]
+#[route("/rate", method = "GET", method = "HEAD")]
 async fn rate() -> Result<impl Responder> {
     return Ok(res_ok(get_rate()));
 }
 
 /**
  * GET <base_url>/sse
+ * Do not allow HEAD, it's a stream
  */
-#[get("/sse")]
+#[route("/sse", method = "GET")]
 async fn sse_event_stream() -> impl Responder {
     let (sender, receiver) = tokio::sync::mpsc::channel(2);
 

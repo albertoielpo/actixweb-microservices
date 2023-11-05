@@ -1,12 +1,16 @@
 use crate::common::response::res_ok;
 use crate::config::error_handler::AppError;
-use actix_web::{get, web, Responder, Result};
+use actix_web::{
+    route,
+    web::{self},
+    Responder, Result,
+};
 use std::fs;
 
 /**
  * GET <base_url>/error-test/panic
  */
-#[get("/error-test/panic")]
+#[route("/error-test/panic", method = "GET", method = "HEAD")]
 async fn rate_panic() -> Result<impl Responder> {
     //this file does not exists! panic!
     fs::read_to_string("FAKE.md").expect("Test panic error");
@@ -17,7 +21,7 @@ async fn rate_panic() -> Result<impl Responder> {
 /**
  * GET <base_url>/error-test/raised
  */
-#[get("/error-test/raised")]
+#[route("/error-test/raised", method = "GET", method = "HEAD")]
 async fn rate_error() -> Result<impl Responder> {
     //this file does not exists! propagate error
     fs::read_to_string("FAKE.md")?;
@@ -28,7 +32,7 @@ async fn rate_error() -> Result<impl Responder> {
 /**
  * GET <base_url>/error-test/managed/1
  */
-#[get("/error-test/managed/{id}")]
+#[route("/error-test/managed/{id}", method = "GET", method = "HEAD")]
 async fn rate_error_managed(path: web::Path<u32>) -> Result<impl Responder, AppError> {
     let path = path.into_inner();
     match path {
