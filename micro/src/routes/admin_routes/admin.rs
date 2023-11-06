@@ -2,6 +2,8 @@ use crate::{common::response::res_ok, config::error_handler::AppError};
 use actix_web::{route, Responder, Result};
 use log::debug;
 
+pub const ADMIN_SCOPE: &str = "/admin";
+
 /**
  * GET <base_url>/admin
  */

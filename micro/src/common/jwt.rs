@@ -1,7 +1,7 @@
 use actix_web::guard::GuardContext;
 use common_lib::utils::date::unix_timestamp;
 use hmac::{Hmac, Mac};
-use jwt::{Error, SignWithKey, VerifyWithKey};
+use jwt::{Error, SignWithKey};
 use lazy_static::lazy_static;
 use log::debug;
 use sha2::Sha256;
@@ -43,6 +43,7 @@ pub fn verify(ctx: &GuardContext) -> bool {
     let auth_header = ctx.head().headers().get("authorization");
     if auth_header.is_none() {
         debug!("Unauthorized");
+        // TODO: think about to raise something...
         return false;
     }
 
