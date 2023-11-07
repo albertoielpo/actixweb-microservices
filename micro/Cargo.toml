@@ -39,3 +39,4 @@ common-lib = { path = "../common-lib" }
 # database
 # redis = "0.23"
 redis = { version = "0.23", features = ["tokio-comp"] }
+bb8-redis = "0.13"

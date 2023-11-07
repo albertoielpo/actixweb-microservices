@@ -1,5 +1,7 @@
 use std::env;
 
+use crate::common::redis::RedisProvider;
+
 pub struct ServerBind {
     pub addr: String,
     pub port: u16,
@@ -23,7 +25,7 @@ pub fn init_server_bind() -> ServerBind {
     /* init server bind */
     let addr = match env::var("BIND_ADDR") {
         Ok(v) => v,
-        Err(_) => String::from("0.0.0.0"),
+        Err(_) => "0.0.0.0".to_owned(),
     };
     let default_port = 3000;
     let port = match env::var("BIND_PORT") {
@@ -32,4 +34,21 @@ pub fn init_server_bind() -> ServerBind {
     };
 
     return ServerBind { addr, port };
+}
+
+/**
+ * Init redis
+ */
+pub async fn init_redis() {
+    let addr = match env::var("REDIS_ADDR") {
+        Ok(v) => v,
+        Err(_) => "redis://localhost:6379".to_owned(),
+    };
+    let default_max_size: u32 = 5;
+    let pool_max_size = match env::var("REDIS_POOL_MAX_SIZE") {
+        Ok(v) => v.parse::<u32>().unwrap_or(default_max_size),
+        Err(_) => default_max_size,
+    };
+
+    RedisProvider::new(addr, pool_max_size).await.unwrap();
 }

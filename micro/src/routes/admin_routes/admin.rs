@@ -3,6 +3,7 @@ use crate::{
     config::error_handler::AppError,
 };
 use actix_web::{route, Responder, Result};
+use log::error;
 
 pub const ADMIN_SCOPE: &str = "/admin";
 
@@ -14,6 +15,9 @@ async fn get_data() -> Result<impl Responder, AppError> {
     let fetch_from_redis = fetch_async_string().await;
     match fetch_from_redis {
         Ok(res) => Ok(res_ok(AdminDto { data: res })),
-        Err(err) => Err(AppError::e500(format!("Redis error {:?}", err))),
+        Err(err) => {
+            error!("{}", err);
+            return Err(AppError::e500("Redis error".to_owned()));
+        }
     }
 }

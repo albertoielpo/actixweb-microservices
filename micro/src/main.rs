@@ -7,7 +7,7 @@ use actix_web_lab::middleware::CatchPanic;
 use log::info;
 use micro::{
     config::error_handler::add_error_body,
-    config::main_config::{init_logger, init_server_bind},
+    config::main_config::{init_logger, init_redis, init_server_bind},
     routes::{admin_routes, auth_routes, error_test_routes, rate_routes},
 };
 
@@ -25,6 +25,9 @@ async fn main() -> std::io::Result<()> {
         "Starting micro in main thread {} {} version {}",
         server_bind.addr, server_bind.port, VERSION
     );
+
+    // init redis - should panic if something goes wrong
+    init_redis().await;
 
     HttpServer::new(|| {
         App::new()
