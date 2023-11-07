@@ -13,6 +13,13 @@ services:
       - "3000:3000"
     environment:
       - RUST_LOG=debug
+      #- BIND_ADDR=0.0.0.0
+      #- BIND_PORT=3000
+      - JWT_SECRET=4f4a2e84-6d8e-4d8a-918f-a9f9b8fb2b18
+      - JWT_SUB=alberto@ielpo.net
+      - JWT_ISS=ielpo.net
+      - JWT_AUD=https://ielpo.net
+      - JWT_EXP=7200000
     networks:
       - micro-net
 

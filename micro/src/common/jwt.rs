@@ -13,6 +13,8 @@ lazy_static! {
     static ref JWT_ISS: String = env::var("JWT_ISS").unwrap_or("changeit.please".to_owned());
     static ref JWT_AUD: String =
         env::var("JWT_AUD").unwrap_or("https://changeit.please".to_owned());
+    static ref JWT_EXP: String = env::var("JWT_EXP").unwrap_or("3600000".to_owned());   //1 hour
+
 }
 
 pub fn sign(username: &str) -> Result<String, Error> {
@@ -21,8 +23,8 @@ pub fn sign(username: &str) -> Result<String, Error> {
 
     let now = unix_timestamp();
     let now_str = now.to_string();
-
-    let exp = now + 3600000; //1 hour
+    let tmp = JWT_EXP.parse::<u128>().unwrap_or(0);
+    let exp = now + tmp;
     let exp_str = exp.to_string();
 
     claims.insert("us", &username);
