@@ -20,8 +20,8 @@ pub enum InternalError {
 #[derive(Debug, Display, Error, new)]
 #[display(fmt = "{{\"message\": \"{}\"}}", message)]
 pub struct AppError {
-    pub message: String,
-    pub code: StatusCode,
+    message: String,
+    code: StatusCode,
 }
 
 /**

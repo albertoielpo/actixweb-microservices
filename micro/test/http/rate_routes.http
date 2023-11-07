@@ -1,11 +1,13 @@
+@baseUrl = http://localhost:3000
+
 ### 
 # Ok
 ###
-GET http://localhost:3000/rate
+GET {{baseUrl}}/rate
 Accept: application/json
 
 ### 
 # SSE stream
 ###
-GET http://localhost:3000/sse
+GET {{baseUrl}}/sse
 Accept: text/event-stream

@@ -20,12 +20,14 @@ lazy_static = "1.4"
 # ssl
 # openssl = { version = "0.10", features = ["v110"] }
 
-# utils
-fastrand = "2"
-jwt = "0.16"
+# jwt
 hmac = "0.12"
 sha2 = "0.10"
 actix-web-httpauth = "0.8"
+
+# utils
+fastrand = "2"
+jwt = "0.16"
 
 # sse
 actix-web-lab = "0.20"
@@ -33,3 +35,7 @@ tokio = { version = "1.18.5", features = ["full"] }
 
 # internal
 common-lib = { path = "../common-lib" }
+
+# database
+# redis = "0.23"
+redis = { version = "0.23", features = ["tokio-comp"] }
