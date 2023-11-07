@@ -1,15 +1,17 @@
-use actix_web::{guard, web};
-
-use crate::common::jwt::verify;
+use crate::config::bearer_handler::check_bearer;
 
 use self::admin::ADMIN_SCOPE;
 
+use actix_web::{dev::ServiceRequest, web};
+use actix_web_httpauth::{extractors::bearer::BearerAuth, middleware::HttpAuthentication};
 pub mod admin;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::scope(ADMIN_SCOPE)
-            .guard(guard::fn_guard(verify))
-            .service(admin::get_data),
-    );
+    //bearer check closure...
+    let auth =
+        HttpAuthentication::bearer(|req: ServiceRequest, credentials: BearerAuth| async move {
+            return check_bearer(req, credentials);
+        });
+    //then use as scoped-wrap
+    cfg.service(web::scope(ADMIN_SCOPE).wrap(auth).service(admin::get_data));
 }

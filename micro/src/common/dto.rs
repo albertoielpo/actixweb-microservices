@@ -15,3 +15,8 @@ pub struct LoginDto {
 pub struct TokenDto {
     pub token: String,
 }
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct AdminDto {
+    pub data: String,
+}

@@ -3,8 +3,6 @@ The idea is to create a Rust project, to experiment the actixweb library.
 The cargo workspace contains: micro, websocket and the common lib
 
 ## TODO
-- actixweb guard
-- jwt token usage
 - redis integration
 
 ## Micro
@@ -15,6 +13,8 @@ Rust actixweb project with working:
 - Error Handler with custom error body
 - Route Panic management
 - Log configured via env variable
+- Jwt token login
+- Admin route protected with jwt auth
 
 ## Websocket
 Rust actixweb websocket actors implementation with working:

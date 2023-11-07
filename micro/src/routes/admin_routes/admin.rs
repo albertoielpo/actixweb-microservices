@@ -1,6 +1,8 @@
-use crate::{common::response::res_ok, config::error_handler::AppError};
+use crate::{
+    common::{dto::AdminDto, response::res_ok},
+    config::error_handler::AppError,
+};
 use actix_web::{route, Responder, Result};
-use log::debug;
 
 pub const ADMIN_SCOPE: &str = "/admin";
 
@@ -9,6 +11,7 @@ pub const ADMIN_SCOPE: &str = "/admin";
  */
 #[route("", method = "GET", method = "HEAD")]
 async fn get_data() -> Result<impl Responder, AppError> {
-    debug!("Code here it's protected by a guard...");
-    return Ok(res_ok("It works"));
+    return Ok(res_ok(AdminDto {
+        data: "This data are accessible only with a valid jwt".to_owned(),
+    }));
 }

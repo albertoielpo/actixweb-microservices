@@ -11,6 +11,12 @@ use derive_more::{Display, Error};
 use derive_new::new;
 use log::error;
 use serde_json::Value;
+
+#[derive(Debug, Display, Error, new)]
+pub enum InternalError {
+    JwtDateExpired,
+}
+
 #[derive(Debug, Display, Error, new)]
 #[display(fmt = "{{\"message\": \"{}\"}}", message)]
 pub struct AppError {

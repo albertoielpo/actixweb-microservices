@@ -7,7 +7,7 @@ authors = ["Alberto Ielpo <alberto@ielpo.net>"]
 [dependencies]
 # actix-web = { version = "4", features = ["openssl"] }
 actix-web = "4"
-derive-new = "0.5"
+derive-new = "0.6"
 derive_more = "0.99"
 env_logger = "0.10"
 log = "0.4"
@@ -25,6 +25,7 @@ fastrand = "2"
 jwt = "0.16"
 hmac = "0.12"
 sha2 = "0.10"
+actix-web-httpauth = "0.8"
 
 # sse
 actix-web-lab = "0.20"

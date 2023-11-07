@@ -1,9 +1,8 @@
-use actix_web::guard::GuardContext;
 use common_lib::utils::date::unix_timestamp;
 use hmac::{Hmac, Mac};
-use jwt::{Error, SignWithKey};
+use jwt::{Error, SignWithKey, VerifyWithKey};
 use lazy_static::lazy_static;
-use log::debug;
+use log::error;
 use sha2::Sha256;
 use std::{collections::BTreeMap, env};
 
@@ -38,21 +37,16 @@ pub fn sign(username: &str) -> Result<String, Error> {
     Ok(token)
 }
 
-pub fn verify(ctx: &GuardContext) -> bool {
-    debug!("verify...");
-    let auth_header = ctx.head().headers().get("authorization");
-    if auth_header.is_none() {
-        debug!("Unauthorized");
-        // TODO: think about to raise something...
-        return false;
+pub fn verify(token: &str) -> Result<(), Error> {
+    let key: Hmac<Sha256> = Hmac::new_from_slice(JWT_SECRET.as_bytes())?;
+    let claims: BTreeMap<String, String> = token.verify_with_key(&key)?; //get data
+    let exp_token_date = claims["exp"].parse::<u128>().unwrap_or(0);
+    let now = unix_timestamp();
+    if now > exp_token_date {
+        error!("Token expired!");
+        //a generic error could be raise here.. the interceptor will catch and put +401
+        return Err(Error::InvalidSignature);
     }
 
-    debug!("{:?}", auth_header.unwrap());
-
-    return true;
-    // let key: Hmac<Sha256> = Hmac::new_from_slice(JWT_SECRET.as_bytes())?;
-    // //let claims: BTreeMap<String, String> = token.verify_with_key(&key)?;  //get data
-    // let res = token.verify_with_key(&key);
-
-    // Ok(())
+    Ok(())
 }

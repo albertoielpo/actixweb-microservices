@@ -5,4 +5,5 @@
 ###
 GET  {{baseUrl}}/admin
 Accept: application/json
-Authorization: Bearer xxx
+#Authorization: Basic username:password
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwczovL2NoYW5nZWl0LnBsZWFzZSIsImV4cCI6IjE2OTkzNTEwNTc4NDMiLCJpYXQiOiIxNjk5MzQ3NDU3ODQzIiwiaXNzIjoiY2hhbmdlaXQucGxlYXNlIiwicm9sZSI6InB1YmxpYyIsInN1YiI6ImFkbWluQGNoYW5nZWl0LnBsZWFzZSIsInVzIjoiYWRtaW4ifQ.x6L7p6UwfaIxwkEX4ULx_qu693ayMgoeOdHjvBAp78o
