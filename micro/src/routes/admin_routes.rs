@@ -10,7 +10,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     //bearer check closure...
     let auth =
         HttpAuthentication::bearer(|req: ServiceRequest, credentials: BearerAuth| async move {
-            return check_bearer(req, credentials);
+            check_bearer(req, credentials)
         });
     //then use as scoped-wrap
     cfg.service(web::scope(ADMIN_SCOPE).wrap(auth).service(admin::get_data));
