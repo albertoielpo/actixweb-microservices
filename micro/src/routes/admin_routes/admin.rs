@@ -12,6 +12,6 @@ pub const ADMIN_SCOPE: &str = "/admin";
 #[route("", method = "GET", method = "HEAD")]
 async fn get_data() -> Result<impl Responder, AppError> {
     return Ok(res_ok(AdminDto {
-        data: "This data are accessible only with a valid jwt".to_owned(),
+        data: "Welcome to admin data".to_owned(),
     }));
 }
