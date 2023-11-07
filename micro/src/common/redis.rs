@@ -1,6 +1,6 @@
 use redis::RedisError;
 
-pub async fn fetch_async_an_integer() -> Result<String, RedisError> {
+pub async fn fetch_async_string() -> Result<String, RedisError> {
     let client = redis::Client::open("redis://127.0.0.1:6379").unwrap();
     let mut con = client.get_async_connection().await?;
 
