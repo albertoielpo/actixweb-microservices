@@ -3,7 +3,7 @@ The idea is to create a Rust project, to experiment the actixweb library.
 The cargo workspace contains: micro, websocket and the common lib
 
 ## TODO
-- redis integration
+- timeout management
 
 ## Micro
 Rust actixweb project with working:
@@ -23,6 +23,7 @@ Rust actixweb websocket actors implementation with working:
 
 ## Common Lib
 - Common behavior
+- Redis provider
 
 ## Docker
 Three stage build using cargo chef to obtain a lightweight image starting from scratch and to reduce build time if dependecies does not change.

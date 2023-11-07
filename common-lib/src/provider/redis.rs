@@ -5,7 +5,6 @@ use bb8_redis::{
     RedisConnectionManager,
 };
 use lazy_static::lazy_static;
-use log::info;
 use redis::RedisError;
 
 lazy_static! {
@@ -59,10 +58,4 @@ impl RedisProvider {
         let data: String = redis::cmd("GET").arg(key).query_async(&mut *conn).await?;
         Ok(data)
     }
-}
-pub async fn fetch_async_string() -> Result<String, RunError<RedisError>> {
-    let res_1 = RedisProvider::set("key".to_owned(), "val".to_owned()).await?;
-    info!("{:?}", res_1);
-    let res_2 = RedisProvider::get("key".to_owned()).await;
-    return res_2;
 }

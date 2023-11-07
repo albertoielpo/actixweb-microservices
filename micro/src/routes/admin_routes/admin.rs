@@ -1,8 +1,9 @@
 use crate::{
-    common::{dto::AdminDto, redis::fetch_async_string, response::res_ok},
+    common::{dto::AdminDto, response::res_ok},
     config::error_handler::AppError,
 };
 use actix_web::{route, Responder, Result};
+use common_lib::provider::redis::RedisProvider;
 use log::error;
 
 pub const ADMIN_SCOPE: &str = "/admin";
@@ -12,7 +13,7 @@ pub const ADMIN_SCOPE: &str = "/admin";
  */
 #[route("", method = "GET", method = "HEAD")]
 async fn get_data() -> Result<impl Responder, AppError> {
-    let fetch_from_redis = fetch_async_string().await;
+    let fetch_from_redis = RedisProvider::get("key".to_owned()).await;
     match fetch_from_redis {
         Ok(res) => Ok(res_ok(AdminDto { data: res })),
         Err(err) => {

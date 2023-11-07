@@ -1,6 +1,6 @@
 use std::env;
 
-use crate::common::redis::RedisProvider;
+use common_lib::provider::redis::RedisProvider;
 
 pub struct ServerBind {
     pub addr: String,
