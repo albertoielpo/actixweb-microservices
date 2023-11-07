@@ -1,7 +1,5 @@
-use crate::config::bearer_handler::check_bearer;
-
 use self::admin::ADMIN_SCOPE;
-
+use crate::config::bearer_handler::check_bearer;
 use actix_web::{dev::ServiceRequest, web};
 use actix_web_httpauth::{extractors::bearer::BearerAuth, middleware::HttpAuthentication};
 pub mod admin;
