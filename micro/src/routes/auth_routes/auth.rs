@@ -16,7 +16,7 @@ use log::error;
  */
 #[route("/auth/login", method = "POST")]
 async fn login(info: web::Json<LoginDto>) -> Result<impl Responder, AppError> {
-    //TODO: change credential verification to database
+    // here you can rely to a credential storage (env, database, ... )
     if info.username == "admin" && info.password == "password" {
         let token = sign(&info.username);
         match token {

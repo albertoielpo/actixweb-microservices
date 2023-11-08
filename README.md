@@ -13,7 +13,7 @@ Rust actixweb project with working:
 - Error Handler with custom error body
 - Route Panic management
 - Log configured via env variable
-- Jwt token login
+- Jwt token login with fixed credential (auth_routes.http)
 - Admin route protected with jwt auth
 
 ## Websocket

@@ -50,5 +50,7 @@ pub async fn init_redis() {
         Err(_) => default_max_size,
     };
 
-    RedisProvider::new(addr, pool_max_size).await.unwrap();
+    RedisProvider::new(addr, pool_max_size)
+        .await
+        .expect("Unrecoverable error in RedisProvider::new");
 }
