@@ -1,8 +1,9 @@
 @baseUrl = http://localhost:3000
+@bearer = eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwczovL2NoYW5nZWl0LnBsZWFzZSIsImV4cCI6IjE2OTk0MzI2NTAwMDQiLCJpYXQiOiIxNjk5NDI5MDUwMDA0IiwiaXNzIjoiY2hhbmdlaXQucGxlYXNlIiwicm9sZSI6InB1YmxpYyIsInN1YiI6ImFkbWluQGNoYW5nZWl0LnBsZWFzZSIsInVzIjoiYWRtaW4ifQ.Nax0irUMsPyPmOULk7TukeLvDXQzCbxQKvMDdY0cRVc
 
 ### 
 # Admin route 
 ###
 GET  {{baseUrl}}/admin
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwczovL2NoYW5nZWl0LnBsZWFzZSIsImV4cCI6IjE2OTkzODE3NzA0NjUiLCJpYXQiOiIxNjk5Mzc4MTcwNDY1IiwiaXNzIjoiY2hhbmdlaXQucGxlYXNlIiwicm9sZSI6InB1YmxpYyIsInN1YiI6ImFkbWluQGNoYW5nZWl0LnBsZWFzZSIsInVzIjoiYWRtaW4ifQ.u_FAamzbo5nS9ZhtKMAnSXOLeI4Uat36lzLoAHgKIRQ
+Authorization: Bearer {{bearer}}

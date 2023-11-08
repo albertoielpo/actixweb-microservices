@@ -5,8 +5,8 @@ edition = "2021"
 authors = ["Alberto Ielpo <alberto@ielpo.net>"]
 
 [dependencies]
-# actix-web = { version = "4", features = ["openssl"] }
-actix-web = "4"
+actix-web = { version = "4", features = ["openssl"] }
+#actix-web = "4"
 derive-new = "0.6"
 derive_more = "0.99"
 env_logger = "0.10"
@@ -18,7 +18,8 @@ actix-http = "3.4"
 lazy_static = "1.4"
 
 # ssl
-# openssl = { version = "0.10", features = ["v110"] }
+# make sure to have openssl pkg-config libssl-dev installed
+openssl = { version = "0.10", features = ["vendored"] }
 
 # jwt
 hmac = "0.12"

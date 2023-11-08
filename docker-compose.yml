@@ -22,6 +22,7 @@ services:
       - JWT_EXP=7200000
       - REDIS_ADDR=redis://redis:6379
       - REDIS_POOL_MAX_SIZE=5
+      - HTTPS_ENABLED=false
     networks:
       - micro-net
 

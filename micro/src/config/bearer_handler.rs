@@ -19,8 +19,7 @@ pub fn check_bearer(
             let config = req
                 .app_data::<bearer::Config>()
                 .cloned()
-                .unwrap_or_default()
-                .scope("urn:example:channel=HBO&urn:example:rating=G,PG-13"); //TODO: modify this..
+                .unwrap_or_default();
 
             Err((AuthenticationError::from(config).into(), req))
         }
