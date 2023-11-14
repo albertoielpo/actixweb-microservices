@@ -67,13 +67,11 @@ curl --request GET --url http://localhost:3000/rate --header 'accept: applicatio
 To test SSE stream use the browser http://localhost:3000/sse, your favourite tool or directly open a <code>new EventSource(`http://localhost:3000/sse`)</code>
 
 ### Websocket
-To test websocket API open a connection via <code>new WebSocket(`http://localhost:3001`)</code>.
-
-To start the stream send the json payload <code>{ event: "cmd", data: { type: "start" }}</code>
-
-To stop the stream send the json payload  <code>{ event: "cmd", data: { type: "stop" }} </code>
+- To test websocket API open a connection via <code>new WebSocket(`http://localhost:3001`)</code>.
+- To start the stream send the json payload <code>{ event: "cmd", data: { type: "start" }}</code>
+- To stop the stream send the json payload  <code>{ event: "cmd", data: { type: "stop" }} </code>
 
 
 ## Docs
-Actix Web: https://actix.rs
-Learn rust: https://www.rust-lang.org/learn
+- Actix Web: https://actix.rs
+- Learn rust: https://www.rust-lang.org/learn

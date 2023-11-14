@@ -34,19 +34,37 @@ impl RedisProvider {
         return Ok(());
     }
 
-    pub async fn set(key: String, val: String) -> Result<String, RunError<RedisError>> {
+    pub async fn set(
+        key: String,
+        val: String,
+        ttl: Option<u32>,
+    ) -> Result<String, RunError<RedisError>> {
         //TODO: wrap in a function
         let value = REDIS_POOL.lock().unwrap();
         let pool = value.0.clone().unwrap();
         let mut conn = pool.get().await?;
 
-        let data: String = redis::cmd("SET")
-            .arg(key)
-            //.arg(REDIS_DATE_OF_EXPIRY)
-            .arg(val)
-            .query_async(&mut *conn)
-            .await?;
-        Ok(data)
+        match ttl {
+            Some(ttl) => {
+                let data: String = redis::cmd("SETEX")
+                    .arg(key)
+                    .arg(ttl)
+                    .arg(val)
+                    .query_async(&mut *conn)
+                    .await?;
+
+                return Ok(data);
+            }
+            None => {
+                let data: String = redis::cmd("SET")
+                    .arg(key)
+                    .arg(val)
+                    .query_async(&mut *conn)
+                    .await?;
+
+                return Ok(data);
+            }
+        }
     }
 
     pub async fn get(key: String) -> Result<String, RunError<RedisError>> {
