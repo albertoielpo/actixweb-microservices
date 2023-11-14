@@ -7,8 +7,8 @@ pub struct RateDto {
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct LoginDto {
-    pub username: String,
-    pub password: String,
+    pub us: String, //username
+    pub pa: String, //password
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

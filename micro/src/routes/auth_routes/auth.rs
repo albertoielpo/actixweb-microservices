@@ -12,13 +12,13 @@ use log::error;
 // form: web::Form<FormData> for application/x-www-form-urlencoded
 
 /**
- * POST <base_url>/auth/login
+ * POST <base_url>/auth
  */
-#[route("/auth/login", method = "POST")]
+#[route("/auth", method = "POST")]
 async fn login(info: web::Json<LoginDto>) -> Result<impl Responder, AppError> {
     // here you can rely to a credential storage (env, database, ... )
-    if info.username == "admin" && info.password == "password" {
-        let token = sign(&info.username);
+    if info.us == "admin" && info.pa == "password" {
+        let token = sign(&info.us);
         match token {
             Ok(token) => {
                 return Ok(res_ok(TokenDto { token }));

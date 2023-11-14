@@ -3,11 +3,11 @@
 ### 
 # Login 
 ###
-POST {{baseUrl}}/auth/login
+POST {{baseUrl}}/auth
 Accept: application/json
 Content-Type: application/json
 
 {
-    "username": "admin",
-    "password": "password"
+    "us": "admin",
+    "pa": "password"
 }
