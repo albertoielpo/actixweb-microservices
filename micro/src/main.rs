@@ -11,6 +11,7 @@ use micro::{
     config::error_handler::add_error_body,
     config::main_config::{init_logger, init_redis, init_server_bind},
     routes::{admin_routes, auth_routes, error_test_routes, rate_routes},
+    schedule::rate_schedule::schedule_rate,
 };
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
@@ -33,6 +34,11 @@ async fn main() -> std::io::Result<()> {
     // it does not panic if redis is down
     // it does panic only in case of bug in init phase
     init_redis().await;
+
+    // Start scheduler on a new thread
+    actix_web::rt::spawn(async move {
+        schedule_rate().await;
+    });
 
     // server configuration:  wrap (middleware), configure (routes)
     let server = HttpServer::new(|| {

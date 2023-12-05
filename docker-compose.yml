@@ -34,6 +34,8 @@ services:
       - "3001:3001"
     environment:
       - RUST_LOG=debug
+      - REDIS_ADDR=redis://redis:6379
+      - REDIS_POOL_MAX_SIZE=5
     networks:
       - micro-net
 

@@ -2,7 +2,7 @@ use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpResponse, 
 use actix_web_actors::ws;
 use log::info;
 use websocket::actor::websocket::RateWebSocket;
-use websocket::config::main_config::{init_logger, init_server_bind};
+use websocket::config::main_config::{init_logger, init_redis, init_server_bind};
 
 /**
  * Listen ws:// stream
@@ -28,6 +28,12 @@ async fn main() -> std::io::Result<()> {
         "Starting websocket in main thread {} {} version {}",
         server_bind.addr, server_bind.port, VERSION
     );
+
+    // init redis connection pool with init lazy mode
+    // it does not panic if redis is down
+    // it does panic only in case of bug in init phase
+    init_redis().await;
+
     //Start http server and register websocket to route "/"
     HttpServer::new(|| {
         App::new()

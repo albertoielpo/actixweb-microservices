@@ -12,7 +12,7 @@ use tokio::time::sleep;
  */
 #[route("/rate", method = "GET", method = "HEAD")]
 async fn rate() -> Result<impl Responder> {
-    return Ok(res_ok(get_rate()));
+    return Ok(res_ok(get_rate().await));
 }
 
 /**
@@ -26,7 +26,7 @@ async fn sse_event_stream() -> impl Responder {
     actix_web::rt::spawn(async move {
         let mut id: i32 = 1;
         loop {
-            let rate_value = json!(get_rate());
+            let rate_value = json!(get_rate().await);
             let msg = sse::Data::new(rate_value.to_string())
                 .event("message")
                 .id(id.to_string());

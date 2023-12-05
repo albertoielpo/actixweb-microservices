@@ -1,6 +1,6 @@
 use actix::prelude::{AsyncContext, SpawnHandle};
 use actix::{Actor, StreamHandler};
-use actix_web_actors::ws;
+use actix_web_actors::ws::{self, WebsocketContext};
 use log::{debug, info};
 use std::time::Duration;
 
@@ -19,6 +19,14 @@ impl RateWebSocket {
         Self { sh: None }
     }
 
+    fn send_interval(_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>) {
+        //let rate = get_rate();
+        let rate = "0.00"; //FIXME
+        let x = format!("{{\"rate\":\"{}\"}}", rate);
+        ctx.text(x);
+        debug!("message sent");
+    }
+
     /// send message with interval
     fn handle_interval_messages(&mut self, ctx: &mut <Self as Actor>::Context, stop: bool) {
         if stop {
@@ -27,12 +35,7 @@ impl RateWebSocket {
                 debug!("interval cancelled");
             }
         } else {
-            let sh: SpawnHandle = ctx.run_interval(DISPATCH_INTERVAL, |_act, ctx| {
-                let rate = fastrand::f32() + 1.00;
-                let x = format!("{{\"rate\":\"{}\"}}", rate);
-                ctx.text(x);
-                debug!("message sent");
-            });
+            let sh: SpawnHandle = ctx.run_interval(DISPATCH_INTERVAL, Self::send_interval);
             self.sh = Some(sh);
         }
     }
@@ -68,9 +71,12 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
                     if data_type.eq("start") {
                         info!("this is a start");
                         self.handle_interval_messages(ctx, false);
-                        let rate = fastrand::f32() + 1.00;
+                        // let rate = get_rate();  //FIXME
+                        let rate = "0.00";
                         let x = format!("{{\"rate\":\"{}\"}}", rate);
                         ctx.text(x);
+                        debug!("message sent");
+                        debug!("message sent");
                     } else if data_type.eq("stop") {
                         info!("this is a stop");
                         self.handle_interval_messages(ctx, true);

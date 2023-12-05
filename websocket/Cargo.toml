@@ -15,3 +15,7 @@ serde = { version = "1.0", features = ["derive"] }
 
 # utils
 fastrand = "2"
+futures = { version = "0.3", features = ["compat"] }
+
+# internal
+common-lib = { path = "../common-lib" }
