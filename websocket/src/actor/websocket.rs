@@ -4,6 +4,8 @@ use actix_web_actors::ws::{self, WebsocketContext};
 use log::{debug, info};
 use std::time::Duration;
 
+use crate::service::rate_service::get_rate;
+
 /// How often messages are sent
 const DISPATCH_INTERVAL: Duration = Duration::from_secs(5);
 
@@ -19,12 +21,15 @@ impl RateWebSocket {
         Self { sh: None }
     }
 
-    fn send_interval(_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>) {
-        //let rate = get_rate();
-        let rate = "0.00"; //FIXME
-        let x = format!("{{\"rate\":\"{}\"}}", rate);
-        ctx.text(x);
-        debug!("message sent");
+    fn send_message(_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>) {
+        actix_web::rt::spawn(async move {
+            let rate = get_rate().await;
+            let x = format!("{{\"rate\":\"{}\"}}", rate);
+            debug!("message: {}", x);
+        });
+
+        //FIXME: think about how to do it
+        ctx.text("0.00");
     }
 
     /// send message with interval
@@ -35,7 +40,7 @@ impl RateWebSocket {
                 debug!("interval cancelled");
             }
         } else {
-            let sh: SpawnHandle = ctx.run_interval(DISPATCH_INTERVAL, Self::send_interval);
+            let sh: SpawnHandle = ctx.run_interval(DISPATCH_INTERVAL, Self::send_message);
             self.sh = Some(sh);
         }
     }
@@ -74,9 +79,8 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
                         // let rate = get_rate();  //FIXME
                         let rate = "0.00";
                         let x = format!("{{\"rate\":\"{}\"}}", rate);
+                        debug!("message: {}", x);
                         ctx.text(x);
-                        debug!("message sent");
-                        debug!("message sent");
                     } else if data_type.eq("stop") {
                         info!("this is a stop");
                         self.handle_interval_messages(ctx, true);
