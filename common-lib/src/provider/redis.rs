@@ -18,7 +18,10 @@ pub const KEY_EXAMPLE: &str = "micro:key_example";
 pub struct RedisProvider {}
 
 impl RedisProvider {
-    pub async fn new(connection_string: String, max_size: u32) -> Result<(), RedisError> {
+    pub async fn new(
+        connection_string: String,
+        max_size: u32,
+    ) -> Result<(), bb8_redis::redis::RedisError> {
         //init the connection pool
         let mut value = REDIS_POOL.lock().unwrap();
         if value.0.is_some() {
@@ -42,7 +45,6 @@ impl RedisProvider {
         val: String,
         ttl: Option<u32>,
     ) -> Result<String, RunError<RedisError>> {
-        //TODO: wrap in a function
         let value = REDIS_POOL.lock().unwrap();
         let pool = value.0.clone().unwrap();
         let mut conn = pool.get().await?;
@@ -71,7 +73,6 @@ impl RedisProvider {
     }
 
     pub async fn get(key: String) -> Result<String, RunError<RedisError>> {
-        //TODO: wrap in a function
         let value = REDIS_POOL.lock().unwrap();
         let pool = value.0.clone().unwrap();
         let mut conn = pool.get().await?;

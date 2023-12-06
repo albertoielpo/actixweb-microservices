@@ -66,7 +66,6 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
                 ctx.pong(&msg)
             }
             Ok(ws::Message::Text(text)) => {
-                //let text_str = print!("{}", text);
                 info!("received text {}", text);
                 let payload = serde_json::from_str::<serde_json::Value>(&text).unwrap();
                 let event = &payload["event"];
