@@ -552,7 +552,7 @@ dependencies = [
 
 [[package]]
 name = "common-lib"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "bb8-redis",
  "lazy_static",
@@ -1117,7 +1117,7 @@ checksum = "f665ee40bc4a3c5590afb1e9677db74a508659dfd71e126420da8274909a0167"
 
 [[package]]
 name = "micro"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "actix-cors",
  "actix-http",
@@ -1157,9 +1157,9 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "0.8.9"
+version = "0.8.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3dce281c5e46beae905d4de1870d8b1509a9142b62eedf18b443b011ca8343d0"
+checksum = "8f3d0b296e374a4e6f3c7b0a1f5a51d748a0d34c85e7dc48fc3fa9a87657fe09"
 dependencies = [
  "libc",
  "log",
@@ -1882,7 +1882,7 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
 name = "websocket"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
  "actix",
  "actix-web",
