@@ -4,7 +4,7 @@ use crate::{
 };
 use actix_web::{route, Responder, Result};
 use common_lib::{
-    provider::redis::{RedisProvider, KEY_EXAMPLE},
+    provider::{redis::RedisProvider, redis_keys::KEY_EXAMPLE},
     utils::date::unix_timestamp,
 };
 use log::error;

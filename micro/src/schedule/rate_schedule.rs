@@ -1,4 +1,4 @@
-use common_lib::provider::redis::{RedisProvider, CURRENT_RATE_VALUE};
+use common_lib::provider::{redis::RedisProvider, redis_keys::CURRENT_RATE_VALUE};
 use log::{debug, info};
 use std::time::Duration;
 use tokio::time::sleep;

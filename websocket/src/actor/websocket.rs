@@ -21,15 +21,11 @@ impl RateWebSocket {
         Self { sh: None }
     }
 
-    fn send_message(_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>) {
-        actix_web::rt::spawn(async move {
-            let rate = get_rate().await;
-            let x = format!("{{\"rate\":\"{}\"}}", rate);
-            debug!("message: {}", x);
-        });
-
-        //FIXME: think about how to do it
-        ctx.text("0.00");
+    fn do_send_message(ctx: &mut WebsocketContext<RateWebSocket>) {
+        let rate = get_rate();
+        let x = format!("{{\"rate\":\"{}\"}}", rate);
+        debug!("message: {}", x);
+        ctx.text(x);
     }
 
     /// send message with interval
@@ -40,7 +36,12 @@ impl RateWebSocket {
                 debug!("interval cancelled");
             }
         } else {
-            let sh: SpawnHandle = ctx.run_interval(DISPATCH_INTERVAL, Self::send_message);
+            let sh: SpawnHandle = ctx.run_interval(
+                DISPATCH_INTERVAL,
+                |_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>| {
+                    Self::do_send_message(ctx);
+                },
+            );
             self.sh = Some(sh);
         }
     }
@@ -75,11 +76,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
                     if data_type.eq("start") {
                         info!("this is a start");
                         self.handle_interval_messages(ctx, false);
-                        // let rate = get_rate();  //FIXME
-                        let rate = "0.00";
-                        let x = format!("{{\"rate\":\"{}\"}}", rate);
-                        debug!("message: {}", x);
-                        ctx.text(x);
+                        Self::do_send_message(ctx);
                     } else if data_type.eq("stop") {
                         info!("this is a stop");
                         self.handle_interval_messages(ctx, true);
@@ -89,6 +86,15 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
             Ok(ws::Message::Binary(bin)) => {
                 info!("received bytes");
                 ctx.binary(bin)
+            }
+            Ok(ws::Message::Close(reason)) => {
+                if reason.is_some() {
+                    info!("connection close: {:?}", reason.unwrap());
+                }
+                if self.sh.is_some() {
+                    ctx.cancel_future(self.sh.unwrap());
+                    debug!("interval cancelled");
+                }
             }
             _ => (),
         }

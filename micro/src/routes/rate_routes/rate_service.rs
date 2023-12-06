@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 use common_lib::{
-    provider::redis::{RedisProvider, CURRENT_RATE_VALUE},
+    provider::{redis::RedisProvider, redis_keys::CURRENT_RATE_VALUE},
     utils::date::unix_timestamp,
 };
 use lazy_static::lazy_static;

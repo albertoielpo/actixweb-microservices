@@ -29,10 +29,8 @@ async fn main() -> std::io::Result<()> {
         server_bind.addr, server_bind.port, VERSION
     );
 
-    // init redis connection pool with init lazy mode
-    // it does not panic if redis is down
-    // it does panic only in case of bug in init phase
-    init_redis().await;
+    // init redis sync
+    init_redis();
 
     //Start http server and register websocket to route "/"
     HttpServer::new(|| {
