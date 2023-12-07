@@ -2,9 +2,6 @@
 The idea is to create a Rust project, to experiment the actixweb library.
 The cargo workspace contains: micro, websocket and the common lib
 
-## TODO
-- timeout management
-
 ## Micro
 Rust actixweb project with working:
 - REST GET example
@@ -15,7 +12,8 @@ Rust actixweb project with working:
 - Log configured via env variable
 - Jwt token login with fixed credential (auth_routes.http)
 - Admin route protected with jwt auth
-
+- Https connection
+  
 ## Websocket
 Rust actixweb websocket actors implementation with working:
 - JSON payload communication
@@ -23,7 +21,8 @@ Rust actixweb websocket actors implementation with working:
 
 ## Common Lib
 - Common behavior
-- Redis provider
+- Redis provider async
+- Redis provider sync
 
 ## Docker
 Three stage build using cargo chef to obtain a lightweight image starting from scratch and to reduce build time if dependecies does not change.
