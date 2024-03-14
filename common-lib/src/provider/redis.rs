@@ -15,6 +15,19 @@ lazy_static! {
 pub struct RedisProvider {}
 
 impl RedisProvider {
+    pub async fn n_new(
+        connection_string: String,
+        max_size: u32,
+    ) -> Result<Pool<RedisConnectionManager>, bb8_redis::redis::RedisError> {
+        //init the connection pool
+        let manager = RedisConnectionManager::new(connection_string)?;
+        let pool = bb8::Pool::builder()
+            .max_size(max_size)
+            .build(manager)
+            .await?;
+        Ok(pool)
+    }
+
     pub async fn new(
         connection_string: String,
         max_size: u32,

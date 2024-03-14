@@ -1124,6 +1124,7 @@ dependencies = [
  "actix-web",
  "actix-web-httpauth",
  "actix-web-lab",
+ "bb8-redis",
  "common-lib",
  "derive-new",
  "derive_more",

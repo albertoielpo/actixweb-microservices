@@ -1,6 +1,7 @@
 use crate::{common::response::res_ok, routes::rate_routes::rate_service::get_rate};
-use actix_web::{route, Responder, Result};
+use actix_web::{route, web, Responder, Result};
 use actix_web_lab::sse;
+use bb8_redis::{bb8::Pool, RedisConnectionManager};
 use log::info;
 use serde_json::json;
 
@@ -11,7 +12,7 @@ use tokio::time::sleep;
  * GET <base_url>/rate
  */
 #[route("/rate", method = "GET", method = "HEAD")]
-async fn rate() -> Result<impl Responder> {
+async fn rate(_pool: web::Data<Pool<RedisConnectionManager>>) -> Result<impl Responder> {
     return Ok(res_ok(get_rate().await));
 }
 
