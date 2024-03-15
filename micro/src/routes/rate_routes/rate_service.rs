@@ -1,7 +1,11 @@
 use std::sync::Mutex;
 
+use actix_web::web;
 use common_lib::{
-    provider::{redis::RedisProvider, redis_keys::CURRENT_RATE_VALUE},
+    provider::{
+        redis::{BB8Pool, RedisProvider},
+        redis_keys::CURRENT_RATE_VALUE,
+    },
     utils::date::unix_timestamp,
 };
 use lazy_static::lazy_static;
@@ -36,8 +40,8 @@ pub fn get_rate_old() -> RateDto {
     return value.1.clone();
 }
 
-pub async fn get_rate() -> RateDto {
-    let from_redis = RedisProvider::get(CURRENT_RATE_VALUE.to_owned()).await;
+pub async fn get_rate(pool: web::Data<BB8Pool>) -> RateDto {
+    let from_redis = RedisProvider::get(&pool, CURRENT_RATE_VALUE.to_owned()).await;
     return match from_redis {
         Ok(rate) => RateDto { rate },
         Err(_) => RateDto {

@@ -3,9 +3,10 @@ use std::env;
 use actix_cors::Cors;
 use actix_web::{
     middleware::{ErrorHandlers, Logger},
-    App, HttpServer,
+    web, App, HttpServer,
 };
 use actix_web_lab::middleware::CatchPanic;
+
 use log::info;
 use micro::{
     config::error_handler::add_error_body,
@@ -30,18 +31,17 @@ async fn main() -> std::io::Result<()> {
         server_bind.addr, server_bind.port, VERSION
     );
 
-    // init redis connection pool with init lazy mode
-    // it does not panic if redis is down
-    // it does panic only in case of bug in init phase
-    init_redis().await;
+    // init redis connection pool
+    let pool_redis = init_redis().await;
+    let pool_redis_scheduled = pool_redis.clone();
 
     // Start scheduler on a new thread
     actix_web::rt::spawn(async move {
-        schedule_rate().await;
+        schedule_rate(pool_redis_scheduled).await;
     });
 
     // server configuration:  wrap (middleware), configure (routes)
-    let server = HttpServer::new(|| {
+    let server = HttpServer::new(move || {
         App::new()
             .wrap(Cors::permissive())
             .wrap(
@@ -51,6 +51,7 @@ async fn main() -> std::io::Result<()> {
             )
             .wrap(CatchPanic::default()) // <- after everything except logger
             .wrap(Logger::default())
+            .app_data(web::Data::new(pool_redis.clone()))
             .configure(rate_routes::config)
             .configure(auth_routes::config)
             .configure(admin_routes::config)

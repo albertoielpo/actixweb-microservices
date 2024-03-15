@@ -1,6 +1,6 @@
 use std::env;
 
-use common_lib::provider::redis::RedisProvider;
+use common_lib::provider::redis::{BB8Pool, RedisProvider};
 
 pub struct ServerBind {
     pub addr: String,
@@ -39,7 +39,7 @@ pub fn init_server_bind() -> ServerBind {
 /**
  * Init redis
  */
-pub async fn init_redis() {
+pub async fn init_redis() -> BB8Pool {
     let addr = match env::var("REDIS_ADDR") {
         Ok(v) => v,
         Err(_) => "redis://localhost:6379".to_owned(),
@@ -50,7 +50,14 @@ pub async fn init_redis() {
         Err(_) => default_max_size,
     };
 
-    RedisProvider::new(addr, pool_max_size)
+    // seconds
+    let default_connection_timeout: u64 = 10;
+    let connection_timeout = match env::var("REDIS_CONNECTION_TIMEOUT") {
+        Ok(v) => v.parse::<u64>().unwrap_or(default_connection_timeout),
+        Err(_) => default_connection_timeout,
+    };
+
+    return RedisProvider::new(addr, pool_max_size, connection_timeout)
         .await
         .expect("Unrecoverable error in RedisProvider::new");
 }
