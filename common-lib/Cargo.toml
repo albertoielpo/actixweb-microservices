@@ -9,6 +9,4 @@ edition = "2021"
 
 redis = { version = "0.24", features = ["tokio-comp"] }
 bb8-redis = "0.14"
-
-# utils
-lazy_static = "1.4"
+r2d2_redis = "0.14"

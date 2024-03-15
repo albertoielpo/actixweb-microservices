@@ -1,6 +1,8 @@
 use actix::prelude::{AsyncContext, SpawnHandle};
 use actix::{Actor, StreamHandler};
+use actix_web::web;
 use actix_web_actors::ws::{self, WebsocketContext};
+use common_lib::provider::redis_sync::R2D2Pool;
 use log::{debug, info};
 use std::time::Duration;
 
@@ -14,15 +16,20 @@ const DISPATCH_INTERVAL: Duration = Duration::from_secs(5);
 pub struct RateWebSocket {
     //Spawn handle used to run interval
     sh: Option<SpawnHandle>,
+    pool: web::Data<R2D2Pool>,
 }
 
 impl RateWebSocket {
-    pub fn new() -> Self {
-        Self { sh: None }
+    pub fn new(pool: web::Data<R2D2Pool>) -> Self {
+        Self { sh: None, pool }
     }
 
-    fn do_send_message(ctx: &mut WebsocketContext<RateWebSocket>) {
-        let rate = get_rate();
+    fn get_pool(&self) -> web::Data<R2D2Pool> {
+        self.pool.clone()
+    }
+
+    fn do_send_message(ctx: &mut WebsocketContext<RateWebSocket>, pool: web::Data<R2D2Pool>) {
+        let rate = get_rate(pool);
         let x = format!("{{\"rate\":\"{}\"}}", rate);
         debug!("message: {}", x);
         ctx.text(x);
@@ -38,8 +45,8 @@ impl RateWebSocket {
         } else {
             let sh: SpawnHandle = ctx.run_interval(
                 DISPATCH_INTERVAL,
-                |_act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>| {
-                    Self::do_send_message(ctx);
+                |act: &mut RateWebSocket, ctx: &mut WebsocketContext<RateWebSocket>| {
+                    Self::do_send_message(ctx, act.get_pool());
                 },
             );
             self.sh = Some(sh);
@@ -76,7 +83,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RateWebSocket {
                     if data_type.eq("start") {
                         info!("this is a start");
                         self.handle_interval_messages(ctx, false);
-                        Self::do_send_message(ctx);
+                        Self::do_send_message(ctx, self.get_pool());
                     } else if data_type.eq("stop") {
                         info!("this is a stop");
                         self.handle_interval_messages(ctx, true);

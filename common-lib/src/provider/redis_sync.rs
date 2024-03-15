@@ -1,44 +1,51 @@
-use std::sync::Mutex;
-
-use lazy_static::lazy_static;
-use redis::{Client, Commands};
-
 use crate::error::common_error::{CommonError, CommonErrorMessage};
+use r2d2_redis::{r2d2, redis::Commands, RedisConnectionManager};
+use std::time::Duration;
 
-lazy_static! {
-    static ref REDIS_SYNC_CONN: Mutex<(Option<Client>, bool)> = Mutex::new((None, true));
-}
-/// Redis Provider Sync using single connection
+/// Redis r2d2 sync pool manager
+pub type R2D2Pool = r2d2::Pool<RedisConnectionManager>;
 pub struct RedisProviderSync {}
 
 impl RedisProviderSync {
-    pub fn new(connection_string: String) -> Result<(), bb8_redis::redis::RedisError> {
-        //init single connection
-        let client: redis::Client = redis::Client::open(connection_string)?;
-        let mut value = REDIS_SYNC_CONN.lock().unwrap();
-        value.0 = Some(client);
-        return Ok(());
+    pub fn new(
+        connection_string: String,
+        max_size: u32,
+        connection_timeout: u64,
+    ) -> Result<R2D2Pool, CommonError> {
+        let manager = RedisConnectionManager::new(connection_string);
+        if manager.is_err() {
+            return Err(CommonError {
+                message: CommonErrorMessage::RedisPoolError,
+            });
+        }
+        let manager = manager.unwrap();
+        let res: Result<R2D2Pool, r2d2::Error> = r2d2::Pool::builder()
+            .max_size(max_size)
+            .connection_timeout(Duration::from_secs(connection_timeout))
+            .build(manager);
+        match res {
+            Ok(res) => Ok(res),
+            Err(_) => Err(CommonError {
+                message: CommonErrorMessage::RedisPoolError,
+            }),
+        }
     }
 
-    pub fn get(key: String) -> Result<String, CommonError> {
-        let value = REDIS_SYNC_CONN.lock().unwrap();
-        if value.0.is_none() {
+    pub fn get(pool: &R2D2Pool, key: String) -> Result<String, CommonError> {
+        let conn = pool.get();
+        if conn.is_err() {
             return Err(CommonError {
                 message: CommonErrorMessage::RedisConnectionError,
             });
         }
 
-        let client = value.0.clone().unwrap();
-        match client.get_connection() {
-            Ok(mut conn) => {
-                let res: String = conn.get(key).unwrap();
-                return Ok(res);
-            }
-            Err(_) => {
-                return Err(CommonError {
-                    message: CommonErrorMessage::RedisConnectionError,
-                });
-            }
+        let mut conn = conn.unwrap();
+        let data = conn.get(key);
+        match data {
+            Ok(data) => Ok(data),
+            Err(_) => Err(CommonError {
+                message: CommonErrorMessage::RedisConnectionError,
+            }),
         }
     }
 }

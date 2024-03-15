@@ -1,62 +1,38 @@
-use std::sync::Mutex;
+use std::time::Duration;
 
 use bb8_redis::{
-    bb8::{self, Pool, RunError},
+    bb8::{self, RunError},
     RedisConnectionManager,
 };
-use lazy_static::lazy_static;
+
 use redis::RedisError;
 
-lazy_static! {
-    static ref REDIS_POOL: Mutex<(Option<Pool<RedisConnectionManager>>, bool)> =
-        Mutex::new((None, true));
-}
-
 pub struct RedisProvider {}
+pub type BB8Pool = bb8::Pool<RedisConnectionManager>;
+// https://github.com/sankaku/sample_actix_with_redis/tree/main
 
 impl RedisProvider {
-    pub async fn n_new(
+    pub async fn new(
         connection_string: String,
         max_size: u32,
-    ) -> Result<Pool<RedisConnectionManager>, bb8_redis::redis::RedisError> {
+        connection_timeout: u64,
+    ) -> Result<BB8Pool, bb8_redis::redis::RedisError> {
         //init the connection pool
         let manager = RedisConnectionManager::new(connection_string)?;
         let pool = bb8::Pool::builder()
             .max_size(max_size)
+            .connection_timeout(Duration::from_secs(connection_timeout))
             .build(manager)
             .await?;
         Ok(pool)
     }
 
-    pub async fn new(
-        connection_string: String,
-        max_size: u32,
-    ) -> Result<(), bb8_redis::redis::RedisError> {
-        //init the connection pool
-        let mut value = REDIS_POOL.lock().unwrap();
-        if value.0.is_some() {
-            // check if there are some value...
-            return Ok(());
-        }
-
-        let manager = RedisConnectionManager::new(connection_string)?;
-        let pool = bb8::Pool::builder()
-            .max_size(max_size)
-            .build(manager)
-            .await?;
-        let clone: Pool<RedisConnectionManager> = pool.clone();
-        value.0 = Some(clone);
-
-        return Ok(());
-    }
-
     pub async fn set(
+        pool: &BB8Pool,
         key: String,
         val: String,
         ttl: Option<u32>,
     ) -> Result<String, RunError<RedisError>> {
-        let value = REDIS_POOL.lock().unwrap();
-        let pool = value.0.clone().unwrap();
         let mut conn = pool.get().await?;
 
         match ttl {
@@ -82,11 +58,8 @@ impl RedisProvider {
         }
     }
 
-    pub async fn get(key: String) -> Result<String, RunError<RedisError>> {
-        let value = REDIS_POOL.lock().unwrap();
-        let pool = value.0.clone().unwrap();
+    pub async fn get(pool: &BB8Pool, key: String) -> Result<String, RunError<RedisError>> {
         let mut conn = pool.get().await?;
-
         let data: String = redis::cmd("GET").arg(key).query_async(&mut *conn).await?;
         Ok(data)
     }

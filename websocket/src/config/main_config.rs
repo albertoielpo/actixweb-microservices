@@ -1,6 +1,6 @@
 use std::env;
 
-use common_lib::provider::redis_sync::RedisProviderSync;
+use common_lib::provider::redis_sync::{R2D2Pool, RedisProviderSync};
 
 pub struct ServerBind {
     pub addr: String,
@@ -39,11 +39,12 @@ pub fn init_server_bind() -> ServerBind {
 /**
  * Init redis
  */
-pub fn init_redis() {
+pub fn init_redis() -> R2D2Pool {
     let addr = match env::var("REDIS_ADDR") {
         Ok(v) => v,
         Err(_) => "redis://localhost:6379".to_owned(),
     };
 
-    RedisProviderSync::new(addr).expect("Unrecoverable error in RedisProviderSync::new");
+    return RedisProviderSync::new(addr, 5, 10)
+        .expect("Unrecoverable error in RedisProviderSync::new");
 }

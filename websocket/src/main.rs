@@ -1,5 +1,6 @@
 use actix_web::{middleware::Logger, web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use actix_web_actors::ws;
+use common_lib::provider::redis_sync::R2D2Pool;
 use log::info;
 use websocket::actor::websocket::RateWebSocket;
 use websocket::config::main_config::{init_logger, init_redis, init_server_bind};
@@ -8,10 +9,11 @@ use websocket::config::main_config::{init_logger, init_redis, init_server_bind};
  * Listen ws:// stream
  */
 async fn websocket_route_listener(
+    pool: web::Data<R2D2Pool>,
     req: HttpRequest,
     stream: web::Payload,
 ) -> Result<HttpResponse, Error> {
-    let resp = ws::start(RateWebSocket::new(), &req, stream);
+    let resp = ws::start(RateWebSocket::new(pool), &req, stream);
     info!("{:?}", resp);
     resp
 }
@@ -30,12 +32,13 @@ async fn main() -> std::io::Result<()> {
     );
 
     // init redis sync
-    init_redis();
+    let pool_redis = init_redis();
 
     //Start http server and register websocket to route "/"
-    HttpServer::new(|| {
+    HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
+            .app_data(web::Data::new(pool_redis.clone()))
             .route("/", web::get().to(websocket_route_listener))
     })
     .bind((server_bind.addr, server_bind.port))?
