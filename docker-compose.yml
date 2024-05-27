@@ -13,6 +13,7 @@ services:
       - "3000:3000"
     environment:
       - RUST_LOG=debug
+      - UPDATE_RATE_INTERVAL=60
       #- BIND_ADDR=0.0.0.0
       #- BIND_PORT=3000
       - JWT_SECRET=<generate_your_own>
