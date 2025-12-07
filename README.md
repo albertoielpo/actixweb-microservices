@@ -2,6 +2,9 @@
 The idea is to create a Rust project, to experiment the actixweb library.
 The cargo workspace contains: micro, websocket and the common lib
 
+## Note
+This project is now read-only. For a more complete production-ready implementation, please refer to https://github.com/albertoielpo/rust-web-starter.git
+
 ## Micro
 Rust actixweb project with working:
 - REST GET example
